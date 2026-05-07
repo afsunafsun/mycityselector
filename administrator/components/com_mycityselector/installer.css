@@ -1,41 +1,24 @@
 #mcs-installer-result {
     margin-bottom: 60px;
-    background-color: #fff;
-    border: 1px solid #909090;
+    background-color: var(--template-bg-light, #f0f4fb);
+    color: var(--template-text-dark, #495057);
+    border: 1px solid var(--template-bg-dark-20, #cdcdcd);
     border-radius: 2px;
     padding: 18px 22px;
 }
 
 #mcs-installer-result .flex-container {
-    display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
     flex-direction: row;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
     flex-wrap: nowrap;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
     justify-content: center;
-    -webkit-align-content: flex-start;
-    -ms-flex-line-pack: start;
     align-content: flex-start;
-    -webkit-align-items: flex-start;
-    -ms-flex-align: start;
     align-items: flex-start;
 }
 
 #mcs-installer-result .flex-item {
-    -webkit-order: 0;
-    -ms-flex-order: 0;
     order: 0;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
     align-self: auto;
     flex-basis: 50%;
 }
@@ -71,6 +54,10 @@
     font-size: 14px;
 }
 
+#mcs-installer-result a {
+    color: var(--template-link-color, #2a69b8);
+}
+
 #mcs-installer-result .green {
     color: #3c763d;
 }
@@ -79,10 +66,7 @@
     color: #ff2b2b;
 }
 
-#mcs-installer-result .section-container .icon-cube {
-    color: #e68300
-}
-
+#mcs-installer-result .section-container .icon-cube,
 #mcs-installer-result .section-container .icon-database {
-    color: #e68300
+    color: #e68300;
 }

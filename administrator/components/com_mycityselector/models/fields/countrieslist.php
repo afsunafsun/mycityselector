@@ -2,10 +2,12 @@
 defined('_JEXEC') or die;
 
 use joomx\mcs\plugin\helpers\McsData;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\FormHelper;
 
-Joomla\CMS\Form\FormHelper::loadFieldClass('list');
+FormHelper::loadFieldClass('list');
 
-class JFormFieldCountriesList extends JFormFieldList
+class JFormFieldCountriesList extends ListField
 {
 
 	protected $type = "CountriesList";
@@ -14,7 +16,7 @@ class JFormFieldCountriesList extends JFormFieldList
 
 	public function getOptions()
 	{
-        $langId = McsData::getLangId();
+        $langId = (int) McsData::getLangId();
 
 		$db = Joomla\CMS\Factory::getDbo();
 		$query = $db->getQuery(true);

@@ -52,11 +52,6 @@ class MycityselectorModelCity extends Joomla\CMS\MVC\Model\AdminModel
 			$data['ordering'] = $db->setQuery($query)->loadResult();
 		}
 
-		if (McsData::MCS_FREE && $this->checkLimits() >= McsData::MCS_LIMIT_5) {
-            Joomla\CMS\Factory::getApplication()->enqueueMessage(JText::sprintf('COM_MYCITYSELECTOR_LIMITS_REACHED'), 'error');
-			$data['published'] = 0;
-		}
-
 		// на случай русскоязычных доменов
         $data['subdomain'] = empty($data['subdomain']) ? '' : (new Punycode())->encode($data['subdomain']);
 
@@ -135,43 +130,9 @@ class MycityselectorModelCity extends Joomla\CMS\MVC\Model\AdminModel
 	}
 
 
-	private function checkLimits()
-	{
-		if (McsData::MCS_FREE)
-		{
-			$isExists = $this->_db->setQuery("SELECT count(`id`) FROM #__mycityselector_cities WHERE published=1")->loadResult();
-			return $isExists;
-		}
-	}
-
-
 	public function publish(&$pks, $value = 1)
 	{
-		if ($value == 1)
-		{
-			if (McsData::MCS_FREE)
-			{
-				$published  = $this->checkLimits();
-				$canPublish = McsData::MCS_LIMIT_5 - $published;
-				if (sizeof($pks) <= $canPublish)
-				{
-					parent::publish($pks, $value);
-				}
-				else
-				{
-                    Joomla\CMS\Factory::getApplication()->enqueueMessage(JText::sprintf('COM_MYCITYSELECTOR_LIMITS_REACHED'), 'error');
-					return false;
-				}
-			}
-			else
-			{
-				parent::publish($pks, $value);
-			}
-		}
-		else
-		{
-			parent::publish($pks, $value);
-		}
+		parent::publish($pks, $value);
 	}
 
     protected function getLangs()

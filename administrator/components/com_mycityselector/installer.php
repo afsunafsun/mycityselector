@@ -7,6 +7,8 @@ defined('_JEXEC') or exit(header("HTTP/1.0 404 Not Found") . '404 Not Found');
 use Joomla\CMS\Factory;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Installer\Adapter\PackageAdapter;
+use Joomla\CMS\Table\Extension;
+use Joomla\CMS\Uri\Uri;
 
 // @devnote Этот инсталлер используется не из компонента, а из установочного файла пакета, поэтому и префикс "pkg_"
 class Pkg_mycityselectorInstallerScript {
@@ -45,7 +47,6 @@ class Pkg_mycityselectorInstallerScript {
      */
     function install(PackageAdapter $adapter)
     {
-        include_once JPATH_ADMINISTRATOR . '/../plugins/system/plgmycityselector/compatibilities/include.php';
         // TODO Внимание
         // В момент вызова этого метода, все нужные файлы уже скопированы в Joomla
         // поэтому искать файлы миграций нужно в админке, в директории компонента
@@ -79,7 +80,6 @@ class Pkg_mycityselectorInstallerScript {
      */
     function uninstall($adapter)
     {
-        include_once JPATH_ADMINISTRATOR . '/../plugins/system/plgmycityselector/compatibilities/include.php';
         // TODO Внимание!
         // при удалении расширения, данный файл находится не в папке компонента (как в dev версии),
         // а в спец. директории /administrator/manifests/packages/mycityselector
@@ -109,7 +109,6 @@ class Pkg_mycityselectorInstallerScript {
      */
     function update($adapter)
     {
-        include_once JPATH_ADMINISTRATOR . '/../plugins/system/plgmycityselector/compatibilities/include.php';
         // TODO Внимание
         // В момент вызова этого метода, все нужные файлы уже скопированы в джумлу
         // поэтому искать файлы миграций нужно в админке, в директории компонента
@@ -133,10 +132,9 @@ class Pkg_mycityselectorInstallerScript {
         if (!empty($params['subdomain_cities'])) {
             $params['seo_mode'] = $params['subdomain_cities'];
             unset($params['subdomain_cities']);
-            $comp->setParams($params);
-            $table = \JTable::getInstance('extension');
+            $table = new Extension(Factory::getDbo());
             $table->load($comp->id);
-            $table->bind(['params' => $comp->params->toString()]);
+            $table->bind(['params' => json_encode($params)]);
             if ($table->check()) {
                 $table->store();
             }
@@ -160,6 +158,18 @@ class Pkg_mycityselectorInstallerScript {
      */
     function preflight($route, $adapter)
     {
+        if ($route === 'uninstall') {
+            return true;
+        }
+
+        if (version_compare(JVERSION, '6.0.0', '<')) {
+            throw new \RuntimeException('My City Selector 4.x requires Joomla 6.0 or newer.');
+        }
+
+        if (version_compare(PHP_VERSION, '8.3.0', '<')) {
+            throw new \RuntimeException('My City Selector 4.x requires PHP 8.3.0 or newer.');
+        }
+
         return true;
     }
 
@@ -176,7 +186,7 @@ class Pkg_mycityselectorInstallerScript {
         // только для методов установки или обновления
         if (!in_array($adapter->getRoute(), ['install', 'update']))  return;
 
-        $dbo = Factory::getDBO();
+        $dbo = Factory::getDbo();
         $version = $adapter->getManifest()->version->__toString();
         $adminComponent = JPATH_BASE.'/components/com_mycityselector/mycityselector.php';
         $siteComponent = JPATH_BASE.'/../components/com_mycityselector/mycityselector.php';
@@ -184,12 +194,12 @@ class Pkg_mycityselectorInstallerScript {
 
         // данные для шаблона
         $data = [
-            'github' => 'https://github.com/art-programming-team/mycityselector/issues',
-            'css' => JUri::root() . '/administrator/components/com_mycityselector/installer.css',
-            'components' > [],
-            'modules' > [],
-            'plugins' > [],
-            'tables' > [],
+            'github' => 'https://github.com/joomx/mycityselector/issues',
+            'css' => Uri::root() . 'administrator/components/com_mycityselector/installer.css',
+            'components' => [],
+            'modules' => [],
+            'plugins' => [],
+            'tables' => [],
         ];
 
         // получаем список всех необходимых таблиц и базовой миграции

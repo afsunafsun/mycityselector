@@ -38,38 +38,38 @@ class MycityselectorViewProvinces extends MycityselectorViewDefault
 	protected function addToolbar()
 	{
 		//$state = $this->get('State');
-		$canDo = JHelperContent::getActions('com_mycityselector');
-		//$user  = JFactory::getUser();
+		$canDo = \Joomla\CMS\Helper\ContentHelper::getActions('com_mycityselector');
+		//$user  = \Joomla\CMS\Factory::getUser();
 
 		// Get the toolbar object instance
 		//$bar = JToolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
 
 		if ($canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('province.add');
+			\Joomla\CMS\Toolbar\ToolbarHelper::addNew('province.add');
 		}
 
 		if ($canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('province.edit');
+			\Joomla\CMS\Toolbar\ToolbarHelper::editList('province.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::publish('provinces.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::unpublish('provinces.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			\Joomla\CMS\Toolbar\ToolbarHelper::publish('provinces.publish', 'JTOOLBAR_PUBLISH', true);
+			\Joomla\CMS\Toolbar\ToolbarHelper::unpublish('provinces.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'provinces.delete', 'JTOOLBAR_REMOVE');
+			\Joomla\CMS\Toolbar\ToolbarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'provinces.delete', 'JTOOLBAR_REMOVE');
 		}
 
 		if ($canDo->get('core.admin'))
 		{
-			JToolbarHelper::preferences('com_mycityselector');
+			\Joomla\CMS\Toolbar\ToolbarHelper::preferences('com_mycityselector');
 		}
 
 

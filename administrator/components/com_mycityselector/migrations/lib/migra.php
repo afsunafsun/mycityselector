@@ -42,7 +42,7 @@ class MigraPhp
     public function __construct($path = '')
     {
         $this->migrationsPath = $path;
-        $this->db = Factory::getDBO();
+        $this->db = Factory::getDbo();
         // проверяем наличие таблицы миграций и создаем если нужно
         $this->migraObject = new MigraObject($this->db);
         $tableName = $this->db->replacePrefix($this->table);
@@ -723,7 +723,7 @@ class MigraObject {
     }
 
     /**
-     * Return joomla db(Factory::getDBO()) object
+     * Return Joomla DB (Factory::getDbo()) object
      * @return JDatabaseDriver
      */
     public function getDb()

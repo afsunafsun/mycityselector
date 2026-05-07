@@ -22,7 +22,6 @@
                 label="COM_MYCITYSELECTOR_FORM_TITLE_NAME"
                 description="COM_MYCITYSELECTOR_FORM_TITLE_NAME"
                 hint="COM_MYCITYSELECTOR_FORM_TITLE_NAME"
-                required="true"
         />
         <field
                 name="subdomain"

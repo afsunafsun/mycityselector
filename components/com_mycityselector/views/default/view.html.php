@@ -7,26 +7,24 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\Registry\Registry;
 
-class MycityselectorViewDefault extends JViewLegacy
+class MycityselectorViewDefault extends HtmlView
 {
 	public function display($tpl = null)
 	{
-		$countryId = \JFactory::getApplication()->input->getCmd('country_id', 0);
+		$countryId = Factory::getApplication()->getInput()->getCmd('country_id', 0);
 		$country   = $this->getModel('country');
-		// sorting
 		$country->setOrder('ordering', 'ASC');
 		$this->countries = [];
-		if ($countryId)
-		{
+		if ($countryId) {
 			$countryOne = $country->getItem($countryId);
-			if (!empty($countryOne))
-			{
+			if (!empty($countryOne)) {
 				$this->countries = [$countryOne];
 			}
-		}
-		else
-		{
+		} else {
 			$this->countries = $country->getItems(false, true);
 		}
 		$province = $this->getModel('province');
@@ -36,8 +34,7 @@ class MycityselectorViewDefault extends JViewLegacy
 		$city->setOrder('ordering', 'ASC');
 		$rows      = $province->getItems(null, false, true);
 		$this->provinces = [];
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$this->provinces[$row['id']] = [
 				'id'         => $row['id'],
 				'country_id' => $row['country_id'],
@@ -45,12 +42,12 @@ class MycityselectorViewDefault extends JViewLegacy
 			];
 		}
 
-		// menu
-		$menu     = \JFactory::getApplication()->getMenu();
-		$this->menuItem = $menu->getActive()->params;
+		$menu = Factory::getApplication()->getMenu();
+		$active = $menu->getActive();
+		$this->menuItem = $active ? $active->getParams() : new Registry();
 
 		$this->cities = $city->getItems(null, false, true);
 
-		parent::display($tpl);
+		return parent::display($tpl);
 	}
 }

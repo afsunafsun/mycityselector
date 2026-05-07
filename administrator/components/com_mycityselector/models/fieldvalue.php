@@ -21,7 +21,7 @@ class MycityselectorModelFieldvalue extends Joomla\CMS\MVC\Model\AdminModel
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $data = Joomla\CMS\Factory::getApplication()->getUserState('com_mycityselector.edit.field.data', []);
+		$data = Joomla\CMS\Factory::getApplication()->getUserState('com_mycityselector.edit.fieldvalue.data', []);
         if (empty($data))
         {
             $data = $this->getItem();
@@ -32,70 +32,80 @@ class MycityselectorModelFieldvalue extends Joomla\CMS\MVC\Model\AdminModel
 
     public function save($data)
     {
-        if (parent::save($data))
+        // Joomla 6: initialize model state before save, so id state is populated correctly after store().
+        $this->getState();
+
+        if (!parent::save($data))
         {
-            $db = Joomla\CMS\Factory::getDbo();
-            // Удаляем записи с таким же field_value_id
-            $field_value_id = $this->getState('fieldvalue.id');
-
-            $query = $db->getQuery(true);
-            $query->delete('#__mycityselector_value_city')->where('field_value_id = ' . $db->quote($field_value_id));
-            $result = $db->setQuery($query)->execute();
-
-            if (isset($data['cities']) && !empty($data['cities']) && !empty($result))
-            {
-                if ($data['cities'] != 0)
-                {
-                    $query = $db->getQuery(true);
-                    $query->insert('#__mycityselector_value_city (field_value_id, city_id)');
-                    foreach ($data['cities'] as $cityId)
-                    {
-                        $query->values($db->q($field_value_id) . ',' . $db->q($cityId));
-                    }
-
-                    $db->setQuery($query)->execute();
-                }
-            }
-
-
-            $query = $db->getQuery(true);
-            $query->delete('#__mycityselector_value_province')->where('field_value_id = ' . $db->quote($field_value_id));
-            $result = $db->setQuery($query)->execute();
-            if (isset($data['provinces']) && !empty($data['provinces'])  && !empty($result))
-            {
-                if ($data['provinces'] != 0)
-                {
-                    $query = $db->getQuery(true);
-                    $query->insert('#__mycityselector_value_province (field_value_id, province_id)');
-                    foreach ($data['provinces'] as $cityId)
-                    {
-                        $query->values($db->q($field_value_id) . ',' . $db->q($cityId));
-                    }
-
-                    $db->setQuery($query)->execute();
-                }
-            }
-
-            $query = $db->getQuery(true);
-            $query->delete('#__mycityselector_value_country')->where('field_value_id = ' . $db->quote($field_value_id));
-            $result = $db->setQuery($query)->execute();
-            if (isset($data['countries']) && !empty($data['countries']) && !empty($result))
-            {
-                if ($data['countries'] != 0)
-                {
-                    $query = $db->getQuery(true);
-                    $query->insert('#__mycityselector_value_country (field_value_id, country_id)');
-                    foreach ($data['countries'] as $cityId)
-                    {
-                        $query->values($db->q($field_value_id) . ',' . $db->q($cityId));
-                    }
-
-                    $db->setQuery($query)->execute();
-                }
-            }
-            return true;
+            return false;
         }
-        return false;
+
+        $fieldValueId = (int) $this->getState($this->getName() . '.id');
+
+        if ($fieldValueId <= 0)
+        {
+            $fieldValueId = (int) ($data['id'] ?? 0);
+        }
+
+        if ($fieldValueId <= 0)
+        {
+            $fieldValueId = (int) $this->getDatabase()->insertid();
+        }
+
+        if ($fieldValueId <= 0)
+        {
+            $this->setError('Не удалось определить ID сохраненного значения поля.');
+            return false;
+        }
+
+        $this->syncLocationLinks('#__mycityselector_value_city', 'city_id', $fieldValueId, $data['cities'] ?? []);
+        $this->syncLocationLinks('#__mycityselector_value_province', 'province_id', $fieldValueId, $data['provinces'] ?? []);
+        $this->syncLocationLinks('#__mycityselector_value_country', 'country_id', $fieldValueId, $data['countries'] ?? []);
+
+        return true;
+    }
+
+    private function syncLocationLinks($tableName, $locationField, $fieldValueId, $values)
+    {
+        $db = Joomla\CMS\Factory::getDbo();
+
+        $query = $db->getQuery(true)
+            ->delete($tableName)
+            ->where('field_value_id = ' . (int) $fieldValueId);
+        $db->setQuery($query)->execute();
+
+        $ids = $this->normalizeLocationValues($values);
+
+        if (empty($ids))
+        {
+            return;
+        }
+
+        $query = $db->getQuery(true)
+            ->insert($tableName)
+            ->columns(['field_value_id', $locationField]);
+
+        foreach ($ids as $locationId)
+        {
+            $query->values((int) $fieldValueId . ',' . (int) $locationId);
+        }
+
+        $db->setQuery($query)->execute();
+    }
+
+    private function normalizeLocationValues($values)
+    {
+        if (is_string($values))
+        {
+            $values = trim($values);
+            $values = $values === '' ? [] : explode(',', $values);
+        }
+        elseif (!is_array($values))
+        {
+            $values = [$values];
+        }
+
+        return array_values(array_unique(array_filter(array_map('intval', $values))));
     }
 
 

@@ -49,7 +49,7 @@ class MycityselectorModelProvinces extends Joomla\CMS\MVC\Model\ListModel
 	 */
 	protected function getListQuery()
 	{
-        $langId = McsData::getLangId();
+        $langId = (int) McsData::getLangId();
 
 		$db    = $this->getDbo();
 		$query = $this->_db->getQuery(true);
@@ -65,7 +65,7 @@ class MycityselectorModelProvinces extends Joomla\CMS\MVC\Model\ListModel
 				$query->where($db->quoteName('id') . ' = ' . (int) substr($search, 3));
 			}  else {
 				$search = $db->quote('%' . strtolower($search) . '%');
-				$query->where('(LOWER(c.name) LIKE ' . $search . ')');
+				$query->where('(LOWER(provname.name) LIKE ' . $search . ')');
 			}
 		}
 		// Filter by country

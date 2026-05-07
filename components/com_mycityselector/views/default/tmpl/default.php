@@ -40,6 +40,10 @@ $returnUrl = Joomla\CMS\Uri\Uri::getInstance()->toString();
                             if ($city['province_id'] == $province['id']) {
 
                                 // TODO взять формирование URL из шаблона modules/mod_mycityselector/tmpl/__city.php
+                                $myUri = \Joomla\CMS\Uri\Uri::getInstance()->getQuery(true);
+                                if (!\is_array($myUri)) {
+                                    $myUri = [];
+                                }
                                 switch (McsData::get('seo_mode'))
                                 {
                                     case 1:
@@ -54,11 +58,11 @@ $returnUrl = Joomla\CMS\Uri\Uri::getInstance()->toString();
                                         break;
                                     case 2:
                                         $myUri['city'] = $city['subdomain'];
-                                        $url = JRoute::_('index.php?' . JUri::buildQuery($myUri));
+                                        $url = \Joomla\CMS\Router\Route::_('index.php?' . \Joomla\CMS\Uri\Uri::buildQuery($myUri));
                                         break;
-                                    case 2:case 3:
+                                    case 3:
                                         $myUri['mcsC'] = $city['subdomain'];
-                                        $url = JRoute::_('index.php?' . JUri::buildQuery($myUri));
+                                        $url = \Joomla\CMS\Router\Route::_('index.php?' . \Joomla\CMS\Uri\Uri::buildQuery($myUri));
                                         break;
                                     default:
                                         $url = '#';//$this->path['path'];

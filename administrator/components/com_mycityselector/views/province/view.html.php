@@ -35,17 +35,17 @@ class MycityselectorViewProvince extends MycityselectorViewDefault
 
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME') . ' - ' . JText::_('COM_MYCITYSELECTOR_ITEM_ADDING'), 'big-ico');
-		JToolbarHelper::apply('province.apply');
-		JToolbarHelper::save('province.save');
-		JToolbarHelper::save2new('province.save2new');
-		JToolbarHelper::cancel('province.cancel');
-        JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME') . ' - ' . \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_ITEM_ADDING'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::apply('province.apply');
+		\Joomla\CMS\Toolbar\ToolbarHelper::save('province.save');
+		\Joomla\CMS\Toolbar\ToolbarHelper::save2new('province.save2new');
+		\Joomla\CMS\Toolbar\ToolbarHelper::cancel('province.cancel');
+        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
 
 		$canDo = Joomla\CMS\Helper\ContentHelper::getActions('com_mycityselector');
 		if ($canDo->get('core.admin'))
 		{
-			JToolbarHelper::preferences('com_mycityselector');
+			\Joomla\CMS\Toolbar\ToolbarHelper::preferences('com_mycityselector');
 		}
 
 		$this->sidebar = MycityselectorHelper::getSidebar($this->_name);

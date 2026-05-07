@@ -15,22 +15,22 @@ class MycityselectorHelper
             } else {
                 $_isActive = ($vName === $action);
             }
-			JHtmlSidebar::addEntry($name, 'index.php?option=com_mycityselector&task=default&view=' . $action, $_isActive);
+			\Joomla\CMS\HTML\Helpers\Sidebar::addEntry($name, 'index.php?option=com_mycityselector&task=default&view=' . $action, $_isActive);
 		}
-		return JHtmlSidebar::render();
+		return \Joomla\CMS\HTML\Helpers\Sidebar::render();
 	}
 
 
 	static function sidebarMenuItems()
 	{
 		$sidebar = [
-			'countries' => JText::_('COM_MYCITYSELECTOR_COUNTRIES'), //'country'
-			'provinces' => JText::_('COM_MYCITYSELECTOR_PROVINCES'),
-			'cities' => JText::_('COM_MYCITYSELECTOR_CITIES'),
-			'fields' => JText::_('COM_MYCITYSELECTOR_FIELDS')
+			'countries' => \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_COUNTRIES'), //'country'
+			'provinces' => \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_PROVINCES'),
+			'cities' => \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_CITIES'),
+			'fields' => \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_FIELDS')
 		];
 //        if (McsData::get('experimental_mode', 0)) {
-//            $sidebar['fields&db_replacement=1'] = JText::_('COM_MYCITYSELECTOR_DB_REPLACEMENTS');
+//            $sidebar['fields&db_replacement=1'] = \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_DB_REPLACEMENTS');
 //        }
 		if (Joomla\CMS\Factory::getConfig()->get('debug') == 1) {
 			$sidebar['dev'] = 'DEV TOOLS';

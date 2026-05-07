@@ -2,8 +2,10 @@
 
 defined('_JEXEC') or die;
 
-JLoader::import('citycase', dirname(__FILE__));
-JFormHelper::loadFieldClass('text');
+use Joomla\CMS\Form\FormHelper;
+
+\JLoader::import('citycase', dirname(__FILE__));
+FormHelper::loadFieldClass('text');
 
 class JFormFieldCityCase2 extends JFormFieldCityCase
 {

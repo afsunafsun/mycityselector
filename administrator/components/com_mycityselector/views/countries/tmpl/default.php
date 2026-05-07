@@ -3,23 +3,24 @@
 
 defined('_JEXEC') or die;
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+use Joomla\CMS\Layout\LayoutHelper;
+
+\Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+\Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
 
 $clientId  = (int) $this->state->get('client_id', 0);
-$user      = JFactory::getUser();
+$user      = \Joomla\CMS\Factory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $saveOrder = ($listOrder == 'ordering');
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_mycityselector&task=countries.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'countryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	\Joomla\CMS\HTML\HTMLHelper::_('sortablelist.sortable', 'countryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $colSpan = $clientId === 1 ? 8 : 10;
 ?>
-<form action="<?= JRoute::_('index.php?option=com_mycityselector'); ?>" method="post" name="adminForm"
+<form action="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_mycityselector'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)) : ?>
     <div id="j-sidebar-container" class="span2">
@@ -29,28 +30,28 @@ $colSpan = $clientId === 1 ? 8 : 10;
 		<?php else : ?>
         <div id="j-main-container">
 			<?php endif; ?>
-			<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+			<?php echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
 			<?php if ($this->total > 0) : ?>
                 <table class="table table-striped" id="countryList">
                     <thead>
                     <tr>
                         <th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('searchtools.sort', '', 'ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+							<?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', '', 'ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                         </th>
                         <th width="1%" class="nowrap center">
-							<?php echo JHtml::_('grid.checkall'); ?>
+							<?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.checkall'); ?>
                         </th>
                         <th width="1%" class="nowrap center" style="min-width:55px">
-							<?php echo JHtml::_('searchtools.sort', 'Jpublished', 'published', $listDirn, $listOrder); ?>
+							<?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'Jpublished', 'published', $listDirn, $listOrder); ?>
                         </th>
                         <th class="title">
-							<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'name', $listDirn, $listOrder); ?>
+							<?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'name', $listDirn, $listOrder); ?>
                         </th>
                         <th class="subdomain">
-							<?php echo JHtml::_('searchtools.sort', 'COM_MYCITYSELECTOR_FORM_TITLE_SUBDOMAIN', 'subdomain', $listDirn, $listOrder); ?>
+							<?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'COM_MYCITYSELECTOR_FORM_TITLE_SUBDOMAIN', 'subdomain', $listDirn, $listOrder); ?>
                         </th>
                         <th width="1%" class="nowrap center hidden-phone">
-							<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'id', $listDirn, $listOrder); ?>
+							<?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'id', $listDirn, $listOrder); ?>
                         </th>
                     </tr>
                     </thead>
@@ -80,7 +81,7 @@ $colSpan = $clientId === 1 ? 8 : 10;
 								}
                                 elseif (!$saveOrder)
 								{
-									$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::_('tooltipText', 'JORDERINGDISABLED');
+									$iconClass = ' inactive tip-top hasTooltip" title="' . \Joomla\CMS\HTML\HTMLHelper::_('tooltipText', 'JORDERINGDISABLED');
 								}
 								?>
                                 <span class="sortable-handler<?php echo $iconClass; ?>">
@@ -91,18 +92,18 @@ $colSpan = $clientId === 1 ? 8 : 10;
 									<?php endif; ?>
                             </td>
                             <td class="center">
-								<?= JHtml::_('grid.id', $i, $item->id); ?>
+								<?= \Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item->id); ?>
                             </td>
                             <td class="center">
                                 <div class="btn-group">
-									<?= JHtml::_('jgrid.published', $item->published, $i, 'countries.', $canChange, 'cb'); ?>
+									<?= \Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, 'countries.', $canChange, 'cb'); ?>
                                 </div>
                             </td>
                             <td class="small">
                                 <div class="name break-word">
 									<?php if ($canEdit) {
                                         ?>
-                                        <a href="<?= JRoute::_('index.php?option=com_mycityselector&task=country.edit&id=' . (int) $item->id); ?>"
+                                        <a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_mycityselector&task=country.edit&id=' . (int) $item->id); ?>"
                                            title="<?= $this->escape($item->name); ?>">
 											<?= $this->escape($item->name); ?></a>
 									    <?php
@@ -128,6 +129,6 @@ $colSpan = $clientId === 1 ? 8 : 10;
 
             <input type="hidden" name="task" value=""/>
             <input type="hidden" name="boxchecked" value="0"/>
-			<?php echo JHtml::_('form.token'); ?>
+			<?php echo \Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
         </div>
 </form>

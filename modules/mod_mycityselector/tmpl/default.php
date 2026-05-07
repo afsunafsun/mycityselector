@@ -35,7 +35,7 @@ if (is_file(__DIR__ . '/custom.css')) {
         question-tooltip-yes="<?= Text::_('JYES') ?>"
         question-tooltip-no="<?= Text::_('JNO') ?>"
         modal-header-title="<?= $this->get('dialog_title') ?>"
-        modal-header-search-placeholder="<?= JText::_('MOD_MYCITYSELECTOR_SEARCH_HINT') ?>"
+        modal-header-search-placeholder="<?= \Joomla\CMS\Language\Text::_('MOD_MYCITYSELECTOR_SEARCH_HINT') ?>"
         text-before="<?= $text_before ?>"
         text-after="<?= $text_after ?>"
         allow-select-whole="<?= McsData::get('allow_select_whole') ?>"

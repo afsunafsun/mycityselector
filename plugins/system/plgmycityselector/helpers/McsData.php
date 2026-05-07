@@ -19,7 +19,7 @@ use joomx\mcs\module\McsModHelper;
  */
 class McsData
 {
-    const MCS_FREE = true;
+    const MCS_FREE = false;
     const MCS_LIMIT_5 = 5;
     const MCS_LIMIT_15 = 15;
 
@@ -210,25 +210,36 @@ class McsData
         self::$compSettings = ComponentHelper::getParams('com_mycityselector');
 
         $db = Factory::getDbo();
-        // load module settings
-        $query = $db->getQuery(true);
-        $query->select('id ,params')->from('#__modules')->where("module = 'mod_mycityselector' LIMIT 1");
-        $query  = Factory::getDbo()->setQuery($query);
-        $result = $query->loadAssoc();
+        // load module settings (invalid SQL with LIMIT inside WHERE broke PHP 8 / strict DB modes)
+        try {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('id') . ', ' . $db->quoteName('params'))
+                ->from($db->quoteName('#__modules'))
+                ->where($db->quoteName('module') . ' = ' . $db->quote('mod_mycityselector'))
+                ->setLimit(1);
+            $db->setQuery($query);
+            $result = $db->loadAssoc();
+        } catch (\Throwable $e) {
+            $result = null;
+        }
 
-        self::$modSettings = new Registry($result['params']);
-
-        // определяем ID модуля
-        self::$moduleId = $result['id'];
+        if (empty($result)) {
+            self::$modSettings = new Registry();
+            self::$moduleId = 0;
+        } else {
+            self::$modSettings = new Registry($result['params'] ?? '{}');
+            self::$moduleId = (int) ($result['id'] ?? 0);
+        }
 
         // проверяем, не указано ли несколько доменов через запятую
-        $baseDomain = self::$compSettings->get('basedomain');
+        $baseDomain = (string) self::$compSettings->get('basedomain', '');
         $multy = explode(',', $baseDomain);
+        $httpHost = $_SERVER['HTTP_HOST'] ?? '';
         if (count($multy) > 1) {
             // нууу, тогда нужно свериться с HTTP_HOST
             foreach ($multy as $host) {
                 $_host = str_replace('www.', '', $host);
-                if (stripos($_SERVER['HTTP_HOST'], $_host) !== false) {
+                if ($httpHost !== '' && stripos($httpHost, $_host) !== false) {
                     // похоже на наш домен
                     $baseDomain = $host;
                     break;
@@ -241,18 +252,25 @@ class McsData
             self::$compSettings->set('basedomain', $baseDomain);
         }
 
-        $query = $db->getQuery(true);
-        $query->select('domain')->from('#__mycityselector_countries')->where("domain != ''");
-        $query  = Factory::getDbo()->setQuery($query);
-        $result = $query->loadAssoc();
-        self::$compSettings->set('countries_domains', $result);
+        try {
+            $query = $db->getQuery(true)
+                ->select($db->quoteName('domain'))
+                ->from($db->quoteName('#__mycityselector_countries'))
+                ->where($db->quoteName('domain') . ' != ' . $db->quote(''));
+            $db->setQuery($query);
+            $domains = $db->loadColumn() ?: [];
+        } catch (\Throwable $e) {
+            $domains = [];
+        }
+        self::$compSettings->set('countries_domains', $domains);
 
         self::$cookieDomain = self::getBaseNameOfCurrentDomain();
 
         // http || https ?
+        $serverPort = (int) ($_SERVER['SERVER_PORT'] ?? 0);
         if (
             (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
-            $_SERVER['SERVER_PORT'] == 443 ||
+            $serverPort === 443 ||
             (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
         ) {
             self::$http = 'https://';
@@ -410,11 +428,7 @@ class McsData
                                   AND `city`.`subdomain` = {$db->quote($code)}
                                   AND `city`.`published` > 0");
 
-            if (McsData::MCS_FREE == true) {
-                $db->setQuery($query, 0, McsData::MCS_LIMIT_5);
-            } else {
-                $db->setQuery($query);
-            }
+            $db->setQuery($query);
 
             $cache[$code] = $db->loadAssoc();
 
@@ -457,11 +471,7 @@ class McsData
                 ->where("`province_name`.`lang_id` = {$langId} AND `country_name`.`lang_id` = {$langId}
                   AND `province`.`subdomain` = {$db->quote($code)}
                   AND `province`.`published` > 0");
-            if (McsData::MCS_FREE === true) {
-                $db->setQuery($query, 0, McsData::MCS_LIMIT_5);
-            } else {
-                $db->setQuery($query);
-            }
+            $db->setQuery($query);
             $cache[$code] = $db->loadAssoc();
             if (!empty($cache[$code])) {
                 $cache[$code]['type'] = 'province';
@@ -499,11 +509,7 @@ class McsData
                                   AND `country`.`subdomain` = {$db->quote($code)}
                                   AND `country`.`published` > 0");
 
-            if (McsData::MCS_FREE == true) {
-                $db->setQuery($query, 0, McsData::MCS_LIMIT_5);
-            } else {
-                $db->setQuery($query);
-            }
+            $db->setQuery($query);
             $cache[$code] = $db->loadAssoc();
             if (!empty($cache[$code])) {
                 $cache[$code]['type'] = 'country';
@@ -622,11 +628,7 @@ class McsData
             $name  = $db->quote('%' . $name . '%');
             $query = $db->getQuery(true);
             $query->select('city_id as id')->from('#__mycityselector_city_names')->where("`name` LIKE {$name}");
-            if (McsData::MCS_FREE == true) {
-                $db->setQuery($query, 0, McsData::MCS_LIMIT_5);
-            } else {
-                $db->setQuery($query);
-            }
+            $db->setQuery($query);
             $res = $db->loadAssocList();
             if (!empty($res)) {
                 $type = 'city';
@@ -1034,17 +1036,25 @@ class McsData
 
     static function getLangId()
     {
-        if (self::$langId)
+        if (self::$langId) {
             return self::$langId;
+        }
 
-        $langId = self::searchLangIdByCurrentLang();
+        try {
+            $langId = self::searchLangIdByCurrentLang();
 
-        if ($langId === false)
-            $langId = self::searchDefaultLangId();
+            if ($langId === false) {
+                $langId = self::searchDefaultLangId();
+            }
 
-        self::$langId = $langId;
+            self::$langId = $langId;
 
-        return $langId;
+            return $langId;
+        } catch (\Throwable $e) {
+            self::$langId = false;
+
+            return false;
+        }
     }
 
     private static function searchLangIdByCurrentLang()
@@ -1303,7 +1313,11 @@ class McsData
 
     public static function getBaseNameOfCurrentDomain()
     {
-        $host_names = explode('.', $_SERVER['HTTP_HOST']);
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if ($host === '') {
+            return 'localhost';
+        }
+        $host_names = explode('.', $host);
         if (count($host_names) > 1) {
             $bottom_host_name = $host_names[count($host_names) - 2]
                 . '.' . $host_names[count($host_names) - 1];
@@ -1317,7 +1331,7 @@ class McsData
     public static function http_strip_query_param($url, $param)
     {
         $pieces = parse_url($url);
-        if (!$pieces['query']) {
+        if (empty($pieces['query'])) {
             return $url;
         }
         $query = [];
@@ -1333,7 +1347,7 @@ class McsData
             .((isset($pieces['user'])) ? $pieces['user'] . ((isset($pieces['pass'])) ? ':' . $pieces['pass'] : '') .'@' : '')
             .((isset($pieces['host'])) ? $pieces['host'] : '')
             .((isset($pieces['port'])) ? ':' . $pieces['port'] : '')
-            .((isset($pieces['path'])) ? $pieces['$pieces'] : '')
+            .((isset($pieces['path'])) ? $pieces['path'] : '')
             .((isset($pieces['query'])) ? '?' . $pieces['query'] : '')
             .((isset($pieces['fragment'])) ? '#' . $pieces['fragment'] : '');
     }

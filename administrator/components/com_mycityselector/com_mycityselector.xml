@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.2" method="upgrade">
+<extension type="component" method="upgrade">
     <name>MyCitySelector</name>
-    <creationDate>Dec 2022</creationDate>
+    <creationDate>2026-05-07</creationDate>
     <author>Konstantin Kutsevalov &amp; Vladislav Smolenskiy</author>
-    <authorEmail>konstantin@kutsevalov.name</authorEmail>
     <authorUrl>http://kutsevalov.name</authorUrl>
     <copyright>All rights reserved</copyright>
-    <license>GNU/GPL v3</license>
-    <version>3.10.40</version>
+    <license>GNU General Public License version 2 or later</license>
+    <version>4.0.0</version>
+    <minimumJoomla>6.0.0</minimumJoomla>
+    <minimumPhp>8.3.0</minimumPhp>
     <description>COM_MYCITYSELECTOR_DESCRIPTION</description>
 
     <files folder="site"><filename>controller.php</filename><folder>controllers</folder><filename>index.html</filename><folder>language</folder><folder>models</folder><filename>mycityselector.php</filename><filename>robots.txt.php</filename><filename>sitemap.xml.php</filename><folder>views</folder></files>
@@ -20,7 +21,7 @@
     </languages>
 
     <administration>
-        <files folder="admin"><filename>access.xml</filename><filename>config.xml</filename><filename>controller.php</filename><folder>controllers</folder><folder>experimental</folder><folder>helpers</folder><folder>images</folder><filename>index.html</filename><filename>installer.css</filename><filename>installer.php</filename><filename>installer.tmpl.php</filename><folder>language</folder><folder>migrations</folder><folder>models</folder><filename>mycityselector.php</filename><folder>tables</folder><folder>views</folder></files>
+        <files folder="admin"><filename>access.xml</filename><folder>assets</folder><filename>config.xml</filename><filename>controller.php</filename><folder>controllers</folder><folder>experimental</folder><folder>helpers</folder><folder>images</folder><filename>index.html</filename><filename>installer.css</filename><filename>installer.php</filename><filename>installer.tmpl.php</filename><folder>language</folder><folder>migrations</folder><folder>models</folder><filename>mycityselector.php</filename><folder>tables</folder><folder>views</folder></files>
 
         <languages folder="admin">
             <language tag="en-GB">language/en-GB/en-GB.com_mycityselector.sys.ini</language>
@@ -31,6 +32,6 @@
     </administration>
 
     <updateservers>
-        <server type="extension" name="My City Selector Update Server">https://raw.githubusercontent.com/active-programming/mycityselector/free/mcs_update.xml</server>
+        <server type="extension" name="My City Selector">https://raw.githubusercontent.com/joomx/mycityselector/master/mcs_update.xml</server>
     </updateservers>
 </extension>

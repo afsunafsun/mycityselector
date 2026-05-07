@@ -3,7 +3,6 @@
 namespace joomx\mcs\module;
 
 use joomx\mcs\plugin\helpers\McsData;
-use JFactory;
 
 defined('_JEXEC') or exit(header("HTTP/1.0 404 Not Found") . '404 Not Found');
 
@@ -56,7 +55,7 @@ class McsModHelper
             foreach ($options['query'] as $param => $value) {
                 $query[] = $param . '=' . $value;
             }
-            $query = '?' . implode('=', $query);
+            $query = '?' . implode('&', $query);
         }
         if (!empty($url['port'])) {
             $url['port'] = ':' . $url['port'];

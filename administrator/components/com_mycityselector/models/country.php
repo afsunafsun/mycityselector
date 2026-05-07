@@ -18,7 +18,7 @@ class MycityselectorModelCountry extends Joomla\CMS\MVC\Model\AdminModel
 	 */
 	public function getTable($type = 'Country', $prefix = 'Table', $config = [])
 	{
-		$table = JTable::getInstance($type, $prefix, $config);
+		$table = Joomla\CMS\Table\Table::getInstance($type, $prefix, $config);
 
 		return $table;
 	}
@@ -42,7 +42,6 @@ class MycityselectorModelCountry extends Joomla\CMS\MVC\Model\AdminModel
 		return $form;
 	}
 
-
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
@@ -61,7 +60,7 @@ class MycityselectorModelCountry extends Joomla\CMS\MVC\Model\AdminModel
     {
         $db = Joomla\CMS\Factory::getDbo();
 
-        if ( !$data['ordering'] ) {
+        if (empty($data['ordering'])) {
             $query = $db->getQuery(true);
             $query->select('max(ordering)+1')->from('#__mycityselector_countries');
             $data['ordering'] = $db->setQuery($query)->loadResult();
@@ -96,6 +95,9 @@ class MycityselectorModelCountry extends Joomla\CMS\MVC\Model\AdminModel
 
         // на случай русскоязычных доменов
         $data['subdomain'] = empty($data['subdomain']) ? '' : (new Punycode())->encode($data['subdomain']);
+
+        // Joomla 6: ensure model state is initialized before AdminModel::save
+        $this->getState();
 
         if ( !parent::save($data) ) {
             return false;

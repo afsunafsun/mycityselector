@@ -27,7 +27,7 @@ if(!in_array($migrationForExecute, $migrations)) {
     exit;
 }
 
-$db = JFactory::getDbo();
+$db = \Joomla\CMS\Factory::getDbo();
 
 require_once(PATH_TO_MIGRATIONS.$migrationForExecute);
 

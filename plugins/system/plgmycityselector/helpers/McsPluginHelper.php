@@ -21,16 +21,29 @@ class McsPluginHelper
      */
     public function getVersion($params)
     {
-        // $db = Factory::getContainer()->get('DatabaseDriver'); // мде, пишут использовать этот класс, а он еще даже не реализован
-        $db = Factory::getDbo(); // зато блин этот уже несколько лет deprecated
-        $query = $db->getQuery(true);
-        $query->select($db->quoteName('manifest_cache'))->from('#__extensions')->where('extension_id = ' . $params['id']);
-        $manifest = $db->setQuery($query)->loadAssoc();
-        if (!empty($manifest['manifest_cache'])) {
-            $manifest = json_decode($manifest['manifest_cache'], true);
-            if ($manifest && isset($manifest['version'])) {
-                return $manifest['version'];
+        $cfg = [];
+        if (\is_array($params)) {
+            $cfg = $params;
+        } elseif (\is_object($params)) {
+            $cfg = (array) $params;
+        }
+        $extId = (int) ($cfg['extension_id'] ?? $cfg['id'] ?? 0);
+        if ($extId < 1) {
+            return '0.0.1';
+        }
+        try {
+            $db = Factory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select($db->quoteName('manifest_cache'))->from('#__extensions')->where('extension_id = ' . $extId);
+            $manifest = $db->setQuery($query)->loadAssoc();
+            if (!empty($manifest['manifest_cache'])) {
+                $manifest = json_decode($manifest['manifest_cache'], true);
+                if ($manifest && isset($manifest['version'])) {
+                    return $manifest['version'];
+                }
             }
+        } catch (\Throwable $e) {
+            // DB недоступна или запись не найдена — не роняем приложение
         }
         return '0.0.1';
     }

@@ -20,10 +20,6 @@ if (!Factory::getUser()->authorise('core.manage', 'com_mycityselector')) {
 
 $application = Factory::getApplication();
 
-if (McsData::MCS_FREE) {
-    $application->enqueueMessage(Text::_('COM_MYCITYSELECTOR_DEMO'),'notice');
-}
-
 $controller = Joomla\CMS\MVC\Controller\BaseController::getInstance('Mycityselector');
 $controller->execute($application->input->get('task'));
 $controller->redirect();

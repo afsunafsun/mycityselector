@@ -31,15 +31,15 @@ class MycityselectorViewCity extends MycityselectorViewDefault
 
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME') . ' - ' . JText::_('COM_MYCITYSELECTOR_ITEM_ADDING'), 'big-ico');
-		JToolbarHelper::apply('city.apply');
-		JToolbarHelper::save('city.save');
-		JToolbarHelper::save2new('city.save2new');
-		JToolbarHelper::cancel('city.cancel');
-		$canDo = JHelperContent::getActions('com_mycityselector');
-		JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME') . ' - ' . \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_ITEM_ADDING'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::apply('city.apply');
+		\Joomla\CMS\Toolbar\ToolbarHelper::save('city.save');
+		\Joomla\CMS\Toolbar\ToolbarHelper::save2new('city.save2new');
+		\Joomla\CMS\Toolbar\ToolbarHelper::cancel('city.cancel');
+		$canDo = \Joomla\CMS\Helper\ContentHelper::getActions('com_mycityselector');
+		\Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
 		if ($canDo->get('core.admin')) {
-			JToolbarHelper::preferences('com_mycityselector');
+			\Joomla\CMS\Toolbar\ToolbarHelper::preferences('com_mycityselector');
 		}
 		$this->sidebar = MycityselectorHelper::getSidebar($this->_name);
 	}

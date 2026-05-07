@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.7" client="administrator" method="upgrade">
+<extension type="module" method="upgrade" client="administrator">
 	<name>MyCitySelector Admin Menu</name>
-    <creationDate>Dec 2022</creationDate>
+    <creationDate>2026-05-07</creationDate>
     <author>Konstantin Kutsevalov &amp; Vladislav Smolenskiy</author>
-    <authorEmail>konstantin@kutsevalov.name</authorEmail>
     <authorUrl>http://kutsevalov.name</authorUrl>
     <copyright>All rights reserved</copyright>
-    <license>GNU/GPL v3</license>
-    <version>3.40.0</version>
+    <license>GNU General Public License version 2 or later</license>
+    <version>4.0.0</version>
+    <minimumJoomla>6.0.0</minimumJoomla>
+    <minimumPhp>8.3.0</minimumPhp>
 	<description>MOD_MYCITYSELECTORADMINMENU_DESCRIPTION</description>
 
 	<files><folder>language</folder><filename module="mod_mycityselector_admin_menu">mod_mycityselector_admin_menu.php</filename><filename>mod_mycityselector_admin_menu.xml</filename><folder>tmpl</folder></files>

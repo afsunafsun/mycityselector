@@ -2,9 +2,13 @@
 
 defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('text');
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Form\FormHelper;
 
-class JFormFieldCityCase extends JFormField
+FormHelper::loadFieldClass('text');
+
+class JFormFieldCityCase extends FormField
 {
 
 	protected $type = "CityCase";
@@ -26,7 +30,7 @@ class JFormFieldCityCase extends JFormField
 
 	    $langs = $this->getLangs();
 
-	    $city_id = JFactory::getApplication()->getUserStateFromRequest('com_mycityselector.edit.city.id', 'id', 0, 'int');
+	    $city_id = \Joomla\CMS\Factory::getApplication()->getUserStateFromRequest('com_mycityselector.edit.city.id', 'id', 0, 'int');
 
 		if (!empty($city_id))
 		{

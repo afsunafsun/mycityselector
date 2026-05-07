@@ -57,7 +57,7 @@ class MycityselectorModelCountries extends Joomla\CMS\MVC\Model\ListModel
      */
     protected function getListQuery()
     {
-        $langId = McsData::getLangId();
+        $langId = (int) McsData::getLangId();
 
     	$db = $this->getDbo();
         $query = $this->_db->getQuery(true);

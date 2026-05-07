@@ -6,12 +6,42 @@ extract($data);
 
 <link href="<?= $css ?>" rel="stylesheet" />
 
+<style>
+#mcs-installer-result {
+    background: #f4f6f8 !important;
+    color: #1f2937 !important;
+    border: 1px solid #b8c2cc !important;
+}
+#mcs-installer-result,
+#mcs-installer-result h3,
+#mcs-installer-result h4,
+#mcs-installer-result p,
+#mcs-installer-result span,
+#mcs-installer-result em,
+#mcs-installer-result div,
+#mcs-installer-result li {
+    color: #1f2937 !important;
+}
+#mcs-installer-result a {
+    color: #0b5ed7 !important;
+}
+#mcs-installer-result .green,
+#mcs-installer-result .green * {
+    color: #198754 !important;
+}
+#mcs-installer-result .red,
+#mcs-installer-result .red * {
+    color: #dc3545 !important;
+}
+</style>
+
+
+
 <div id="mcs-installer-result">
     <h3>
         My City Selector
         <?= $route == 'update' ? ' обновление ' . $version : $version ?>
     </h3>
-    <h4 class="red">Это переходная версия, пилим v4.0.0 для Joomla 4/5</h4>
     <div class="flex-container">
         <div class="flex-item">
             <h4>Проверка установки...</h4>

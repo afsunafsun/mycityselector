@@ -46,7 +46,7 @@ class MycityselectorModelFields extends Joomla\CMS\MVC\Model\ListModel
 	 */
 	protected function getListQuery()
 	{
-        $langId = McsData::getLangId();
+        $langId = (int) McsData::getLangId();
         $isDbRepl = false;
 
         if (isset($_GET['db_replacement'])) {
@@ -114,9 +114,9 @@ class MycityselectorModelFields extends Joomla\CMS\MVC\Model\ListModel
 
 //		 Filter by publish
 		$published = $this->getState('filter.published');
-		if (!empty($published))
+		if ($published !== '' && $published !== null && $published !== '*')
 		{
-			$query->where('a.published = ' . $this->_db->escape($published));
+			$query->where('a.published = ' . (int) $published);
 		}
 
 		$query->group('a.id');
@@ -130,6 +130,26 @@ class MycityselectorModelFields extends Joomla\CMS\MVC\Model\ListModel
 	protected function populateState($ordering = 'name', $direction = 'ASC')
 	{
 		parent::populateState($ordering, $direction);
+	}
+
+	/**
+	 * Stable count query for grouped list SQL.
+	 */
+	protected function _getListCount($query)
+	{
+		$db = $this->getDbo();
+		$countBase = clone $query;
+		$countBase->clear('order')
+			->clear('limit')
+			->clear('offset');
+
+		$countQuery = $db->getQuery(true)
+			->select('COUNT(*)')
+			->from('(' . (string) $countBase . ') AS mcs_fields_count');
+
+		$db->setQuery($countQuery);
+
+		return (int) $db->loadResult();
 	}
 
 }

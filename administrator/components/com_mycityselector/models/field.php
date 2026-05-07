@@ -2,7 +2,7 @@
 
 defined('_JEXEC') or die;
 
-use joomx\mcs\plugin\helpers\McsData;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class MycityselectorModelField extends Joomla\CMS\MVC\Model\AdminModel
 {
@@ -35,7 +35,7 @@ class MycityselectorModelField extends Joomla\CMS\MVC\Model\AdminModel
 	public function getFieldValues()
 	{
 		$field_id = Joomla\CMS\Factory::getApplication()->input->get('id', 0, 'int');
-        $langId = McsData::getLangId();
+        $langId = (int) McsData::getLangId();
 		$db       = Joomla\CMS\Factory::getDbo();
 
 		$query    = $db->getQuery(true);
@@ -69,7 +69,7 @@ class MycityselectorModelField extends Joomla\CMS\MVC\Model\AdminModel
 			$query->select('id')->from('#__mycityselector_field_value')
 				->where('field_id IN (' . implode(',', $pks) . ')');
 			$result          = $db->setQuery($query)->loadColumn();
-			$fieldValueModel = JModelLegacy::getInstance('fieldvalue', 'MycityselectorModel');
+			$fieldValueModel = BaseDatabaseModel::getInstance('fieldvalue', 'MycityselectorModel', ['ignore_request' => true]);
 
 			return $fieldValueModel->delete($result);
 		}
@@ -78,11 +78,6 @@ class MycityselectorModelField extends Joomla\CMS\MVC\Model\AdminModel
 
 	public function save($data)
 	{
-		if (McsData::MCS_FREE && $this->checkLimits() >= McsData::MCS_LIMIT_15)
-		{
-            Joomla\CMS\Factory::getApplication()->enqueueMessage(JText::sprintf('COM_MYCITYSELECTOR_LIMITS_REACHED'), 'error');
-			$data['published'] = 0;
-		}
 		if (parent::save($data))
 		{
 			if (!$data['id'])
@@ -103,36 +98,9 @@ class MycityselectorModelField extends Joomla\CMS\MVC\Model\AdminModel
 	}
 
 
-	private function checkLimits()
-	{
-		if (McsData::MCS_FREE)
-		{
-			$isExists = $this->_db->setQuery("SELECT count(`id`) FROM #__mycityselector_field WHERE published=1")->loadResult();
-			return $isExists;
-		}
-	}
-
-
 	public function publish(&$pks, $value = 1)
 	{
-		if ($value == 1)
-		{
-			$published  = $this->checkLimits();
-			$canPublish = McsData::MCS_LIMIT_15 - $published;
-			if (sizeof($pks) <= $canPublish)
-			{
-				parent::publish($pks, $value);
-			}
-			else
-			{
-                Joomla\CMS\Factory::getApplication()->enqueueMessage(JText::sprintf('COM_MYCITYSELECTOR_LIMITS_REACHED'), 'error');
-				return false;
-			}
-		}
-		else
-		{
-			parent::publish($pks, $value);
-		}
+		parent::publish($pks, $value);
 	}
 
 }

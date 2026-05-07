@@ -2,9 +2,13 @@
 
 defined('_JEXEC') or die;
 
-Joomla\CMS\Form\FormHelper::loadFieldClass('list');
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Form\FormHelper;
 
-class JFormFieldCountrynames extends JFormField
+FormHelper::loadFieldClass('list');
+
+class JFormFieldCountrynames extends FormField
 {
 
     protected $type = "Countrynames";

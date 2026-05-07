@@ -5,17 +5,8 @@
 
 defined('_JEXEC') or exit(header("HTTP/1.0 404 Not Found") . '404 Not Found');
 
-require_once(JPATH_ROOT . '/plugins/system/plgmycityselector/helpers/vendor/autoload.php');
-
-// поскольку последние версии используют новые namespace классов джумлы (изменения произошли кажется после 3.6), то нам нужно сохранять обратную совместимость со старыми версиями 3.x
-if (class_exists('JVersion')) {
-	$_ver = (new JVersion())->getShortVersion();
-	$_ver = explode('.', $_ver);
-	$_ver = floatval($_ver[0] . '.' . $_ver[1]);
-	if ($_ver < 3.6) {
-		require_once realpath(__DIR__ . '/compatibilities/include.php');
-	}
-}
+require_once JPATH_ROOT . '/plugins/system/plgmycityselector/helpers/vendor/autoload.php';
+require_once __DIR__ . '/helpers/bootstrap_aliases.php';
 
 JLoader::registerNamespace('joomx\\mcs\\plugin', JPATH_ROOT . '/plugins/system/plgmycityselector/', false, false, 'psr4');
 //
@@ -83,13 +74,27 @@ class plgSystemPlgMycityselector extends \Joomla\CMS\Plugin\CMSPlugin
 	/**
 	 * Initialization /
 	 */
-	function __construct(&$subject, $params) //
+	public function __construct($subject, $config)
 	{
-            parent::__construct($subject, $params);
+            parent::__construct($subject, $config);
             $this->app = Factory::getApplication();
             $this->helper = new McsPluginHelper();
-            $this->langId = McsData::getLangId();
-            $this->version = $this->helper->getVersion($params);
+            try {
+                $this->langId = McsData::getLangId();
+            } catch (\Throwable $e) {
+                $this->langId = null;
+            }
+            $cfg = [];
+            if (\is_array($config)) {
+                $cfg = $config;
+            } elseif (\is_object($config)) {
+                $cfg = (array) $config;
+            }
+            try {
+                $this->version = $this->helper->getVersion($cfg);
+            } catch (\Throwable $e) {
+                $this->version = '0.0.1';
+            }
             // Включен ли SEO
             $this->mode_sef = $this->app->get('sef', 0);
             // проверяем режим редактирования статьи
@@ -107,7 +112,13 @@ class plgSystemPlgMycityselector extends \Joomla\CMS\Plugin\CMSPlugin
 	public function onAfterInitialise()
 	{
         // Загрузка данных и настроек
-        McsData::load();
+        try {
+            McsData::load();
+        } catch (\Throwable $e) {
+            if (\function_exists('error_log')) {
+                \error_log('plgmycityselector McsData::load: ' . $e->getMessage());
+            }
+        }
         McsLog::add('Загрузка данных');
 
         // experimental
@@ -131,10 +142,10 @@ class plgSystemPlgMycityselector extends \Joomla\CMS\Plugin\CMSPlugin
 			// VirtueMart берет адрес сайта для ajax запросов из конфига, в итоге с поддоменов запросы уходят на основной
 			// и поэтому добавление в корзину не срабатывает (сессии и кросдоменные запросы)
 			if (McsData::get('seo_mode', 0) == 1) {
-				$juri = \JUri::getInstance();
+				$juri = Uri::getInstance();
 				$schemaUrl = $juri->isSsl() ? 'https://' : 'http://';
 				$config = Factory::getConfig();
-				$config->set('live_site', $schemaUrl . $_SERVER['HTTP_HOST'] . '/');
+				$config->set('live_site', $schemaUrl . ($_SERVER['HTTP_HOST'] ?? '') . '/');
 			}
 
             $seoMode = McsData::get('seo_mode', 0);
@@ -357,6 +368,6 @@ class plgSystemPlgMycityselector extends \Joomla\CMS\Plugin\CMSPlugin
 		$params = ComponentHelper::getParams('com_mycityselector');
 		$basedomain = $params->get('basedomain');
 		$qu = "UPDATE `#__update_sites` SET `extra_query`='domain={$basedomain}' WHERE `name`='My City Selector Update Server'";
-		Factory::getDBO()->setQuery($qu)->execute();
+		Factory::getDbo()->setQuery($qu)->execute();
 	}
 } //

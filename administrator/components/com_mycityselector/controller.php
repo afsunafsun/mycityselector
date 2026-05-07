@@ -7,8 +7,6 @@
 
 defined('_JEXEC') or die;
 
-require_once realpath(__DIR__ . '/../../../plugins/system/plgmycityselector/compatibilities/include.php');
-
 /**
  * MyCitySelector Controller
  *
@@ -16,6 +14,12 @@ require_once realpath(__DIR__ . '/../../../plugins/system/plgmycityselector/comp
  */
 class MycityselectorController extends Joomla\CMS\MVC\Controller\BaseController
 {
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        $this->setDispatcher(\Joomla\CMS\Factory::getApplication()->getDispatcher());
+    }
+
 	/**
 	 * Method to display a view.
 	 *

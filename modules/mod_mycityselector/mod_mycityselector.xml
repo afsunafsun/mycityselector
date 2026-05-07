@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.2" method="upgrade" client="site">
+<extension type="module" method="upgrade" client="site">
 	<name>My City Selector MOD</name>
-	<creationDate>Dec 2022</creationDate>
+	<creationDate>2026-05-07</creationDate>
 	<author>Konstantin Kutsevalov &amp; Vladislav Smolenskiy</author>
-	<authorEmail>konstantin@kutsevalov.name</authorEmail>
 	<authorUrl>http://www.kutsevalov.name/2013/08/12/modul-vibora-goroda-dlya-joomla/</authorUrl>
 	<copyright>All rights reserved</copyright>
-	<license>Proprietary</license>
-	<version>3.40.0</version>
+	<license>GNU General Public License version 2 or later</license>
+	<version>4.0.0</version>
+	<minimumJoomla>6.0.0</minimumJoomla>
+	<minimumPhp>8.3.0</minimumPhp>
 	<description><![CDATA[
-	<![CDATA[
 	<h3>My City Selector (Module)</h3>
-	Данный модуль является частью расширения "MyCitySelector".
-	<br/>
-	Более подробное описание читайте <a href="https://github.com/active-programming/mycityselector" title="перейти" target="_blank">на странице модуля</a>.
+	<p>Модуль выбора города. Описание: <a href="https://github.com/joomx/mycityselector" target="_blank" rel="noopener">GitHub</a>.</p>
 	]]></description>
 
     <files><filename>McsModHelper.php</filename><filename>MyCitySelectorModule.php</filename><filename>ext_mod_mini.png</filename><folder>language</folder><filename module="mod_mycityselector">mod_mycityselector.php</filename><filename>mod_mycityselector.xml</filename><folder>tmpl</folder></files>

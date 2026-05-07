@@ -54,7 +54,7 @@ class MycityselectorModelCities extends Joomla\CMS\MVC\Model\ListModel
 	 */
 	protected function getListQuery()
 	{
-        $langId = McsData::getLangId();
+        $langId = (int) McsData::getLangId();
 
         $db    = $this->getDbo();
 		$query = $this->_db->getQuery(true);
@@ -92,8 +92,8 @@ class MycityselectorModelCities extends Joomla\CMS\MVC\Model\ListModel
 		// Filter by publish
 		// Filter by province
 		$published = $this->getState('filter.published');
-		if ( !empty($published) ) {
-			$query->where('t.published = ' . $db->escape($published));
+		if ($published !== '' && $published !== null && $published !== '*') {
+			$query->where('t.published = ' . (int) $published);
 		}
 		$query->order($db->qn($db->escape($this->getState('list.ordering', 'name'))) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 

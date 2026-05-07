@@ -3,19 +3,20 @@
 
 defined('_JEXEC') or die;
 
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+use Joomla\CMS\Layout\LayoutHelper;
+
+\Joomla\CMS\HTML\HTMLHelper::_('bootstrap.tooltip');
+\Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
 
 $clientId  = (int) $this->state->get('client_id', 0);
-$user      = JFactory::getUser();
+$user      = \Joomla\CMS\Factory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $isDbRepl = (bool) isset($_GET['db_replacement']);
 
 $colSpan = $clientId === 1 ? 8 : 10;
 ?>
-<form action="<?= JRoute::_('index.php?option=com_mycityselector&view=fields'); ?>" method="post" name="adminForm"
+<form action="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_mycityselector&view=fields'); ?>" method="post" name="adminForm"
       id="adminForm">
 	<?php if (!empty($this->sidebar)) { ?>
     <div id="j-sidebar-container" class="span2">
@@ -25,33 +26,33 @@ $colSpan = $clientId === 1 ? 8 : 10;
     <?php } else { ?>
         <div id="j-main-container">
     <?php } ?>
-			<?= JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>
+			<?= LayoutHelper::render('joomla.searchtools.default', ['view' => $this]); ?>
 			<?php if ($this->total > 0) { ?>
                 <table class="table table-striped" id="cityList">
                     <thead>
                     <tr>
                         <th width="1%" class="nowrap center">
-							<?= JHtml::_('grid.checkall'); ?>
+							<?= \Joomla\CMS\HTML\HTMLHelper::_('grid.checkall'); ?>
                         </th>
                         <?php if ($this->mode == 'page') { ?>
                         <th width="1%" class="nowrap center" style="min-width:55px">
-							<?= JHtml::_('searchtools.sort', 'Jpublished', 'published', $listDirn, $listOrder); ?>
+							<?= \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'Jpublished', 'published', $listDirn, $listOrder); ?>
                         </th>
                         <?php } ?>
                         <th class="title">
-							<?= JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'name', $listDirn, $listOrder); ?>
+							<?= \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'name', $listDirn, $listOrder); ?>
                         </th>
                         <th class="country">
-		                    <?= JHtml::_('searchtools.sort', 'COM_MYCITYSELECTOR_COUNTRY', 'country', $listDirn, $listOrder); ?>
+		                    <?= \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'COM_MYCITYSELECTOR_COUNTRY', 'country', $listDirn, $listOrder); ?>
                         </th>
                         <th class="province">
-		                    <?= JHtml::_('searchtools.sort', 'COM_MYCITYSELECTOR_PROVINCE', 'province', $listDirn, $listOrder); ?>
+		                    <?= \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'COM_MYCITYSELECTOR_PROVINCE', 'province', $listDirn, $listOrder); ?>
                         </th>
                         <th class="city">
-		                    <?= JHtml::_('searchtools.sort', 'COM_MYCITYSELECTOR_CITY', 'city', $listDirn, $listOrder); ?>
+		                    <?= \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'COM_MYCITYSELECTOR_CITY', 'city', $listDirn, $listOrder); ?>
                         </th>
                         <th width="1%" class="nowrap center hidden-phone">
-							<?= JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'id', $listDirn, $listOrder); ?>
+							<?= \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'id', $listDirn, $listOrder); ?>
                         </th>
                         <?php if ($this->mode == 'popup') { ?>
                             <th class="nowrap center">
@@ -72,12 +73,12 @@ $colSpan = $clientId === 1 ? 8 : 10;
                         <tr class="row<?= $i % 2; ?>"
                             sortable-group-id="1" item-id="<?= $item->id; ?>">
                             <td class="center">
-								<?= JHtml::_('grid.id', $i, $item->id); ?>
+								<?= \Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item->id); ?>
                             </td>
                             <?php if ($this->mode == 'page') { ?>
                             <td class="center">
                                 <div class="btn-group">
-									<?= JHtml::_('jgrid.published', $item->published, $i, 'fields.', $canChange, 'cb'); ?>
+									<?= \Joomla\CMS\HTML\HTMLHelper::_('jgrid.published', $item->published, $i, 'fields.', $canChange, 'cb'); ?>
                                 </div>
                             </td>
                             <?php } ?>
@@ -86,7 +87,7 @@ $colSpan = $clientId === 1 ? 8 : 10;
                                     <?php
                                     if ($this->mode == 'page') {
                                         if ($canEdit) {
-                                            $_url = JRoute::_(
+                                            $_url = \Joomla\CMS\Router\Route::_(
                                                     'index.php?option=com_mycityselector&task=field.edit&id='
                                                 . (int) $item->id
                                                 . ($isDbRepl ? '&db_replacement=1' : '')
@@ -102,7 +103,7 @@ $colSpan = $clientId === 1 ? 8 : 10;
                                         }
                                     } else {
                                         ?>
-                                        <a href="#" title="<?= JText::_('COM_MYCITYSELECTOR_INSERT_CODE') ?>"
+                                        <a href="#" title="<?= \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_INSERT_CODE') ?>"
                                            onclick="window.parent.insertMCS('[mcs-<?= $item->id ?> <?= $name ?>]'); return false;">
                                             <?= $this->escape($item->name) ?>
                                         </a>
@@ -129,13 +130,13 @@ $colSpan = $clientId === 1 ? 8 : 10;
                             <?php if ($this->mode == 'popup') { ?>
                                 <td class="nowrap center">
                                     <a href="#" title="" onclick="window.parent.insertMCS('[mcs-<?= $item->id ?> <?= $name ?>]'); return false;">
-                                        <?= JText::_('COM_MYCITYSELECTOR_INSERT_CODE') ?>
+                                        <?= \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_INSERT_CODE') ?>
                                     </a>
                                 </td>
                             <?php } else { ?>
                                 <td class="hidden-phone">
                                     <?php if ($canEdit) {
-                                        $_url = JRoute::_(
+                                        $_url = \Joomla\CMS\Router\Route::_(
                                             'index.php?option=com_mycityselector&task=field.edit&id='
                                             . (int) $item->id
                                             . ($isDbRepl ? '&db_replacement=1' : '')
@@ -164,6 +165,6 @@ $colSpan = $clientId === 1 ? 8 : 10;
 
             <input type="hidden" name="task" value=""/>
             <input type="hidden" name="boxchecked" value="0"/>
-			<?= JHtml::_('form.token'); ?>
+			<?= \Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
         </div>
 </form>

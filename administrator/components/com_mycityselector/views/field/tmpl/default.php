@@ -14,19 +14,22 @@
 
 defined('_JEXEC') or die(header('HTTP/1.0 403 Forbidden') . 'Restricted access');
 
-JHtml::_('behavior.formvalidator');
-JHtml::_('formbehavior.chosen', 'select');
-JHtml::_('jquery.framework');
-JHtml::_('behavior.multiselect');
-JHtml::_('script', 'system/modal-fields-uncompressed.js', array('version' => 'auto', 'relative' => true));
-$user      = JFactory::getUser();
+\Joomla\CMS\HTML\HTMLHelper::_('behavior.formvalidator');
+\Joomla\CMS\HTML\HTMLHelper::_('jquery.framework');
+\Joomla\CMS\HTML\HTMLHelper::_('behavior.multiselect');
+\Joomla\CMS\HTML\HTMLHelper::_('script', 'system/modal-fields-uncompressed.js', array('version' => 'auto', 'relative' => true));
+$mcsFieldModalJs = JPATH_ADMINISTRATOR . '/components/com_mycityselector/assets/js/field-value-modals.js';
+\Joomla\CMS\Factory::getDocument()->addScript(
+	\Joomla\CMS\Uri\Uri::root(true) . '/administrator/components/com_mycityselector/assets/js/field-value-modals.js?v=' . (is_file($mcsFieldModalJs) ? (string) filemtime($mcsFieldModalJs) : '1')
+);
+$user      = \Joomla\CMS\Factory::getUser();
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 $colSpan   = 8;
 
-$app = JFactory::getDocument();
+$app = \Joomla\CMS\Factory::getDocument();
 
-JFactory::getDocument()->addScriptDeclaration("
+\Joomla\CMS\Factory::getDocument()->addScriptDeclaration("
 	Joomla.submitbutton = function(task)
 	{
 		if (task == 'field.cancel' || document.formvalidator.isValid(document.getElementById('adminForm')))
@@ -41,9 +44,9 @@ $id  = (int) $this->item->id;
 
 ?>
 <div id="j-main-container" class="span10 fields-page">
-    <h3><?= JText::_('COM_MYCITYSELECTOR_FIELDS') ?></h3>
+    <h3><?= \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_FIELDS') ?></h3>
 
-    <form action="<?= JRoute::_('index.php?option=com_mycityselector&layout=edit&id=' . (int) $this->item->id); ?>"
+    <form action="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_mycityselector&layout=edit&id=' . (int) $this->item->id); ?>"
           method="post" name="adminForm" id="adminForm"
           class="form-horizontal">
 		<?php foreach ($fieldSet as $field) {
@@ -66,16 +69,16 @@ $id  = (int) $this->item->id;
                 <thead>
                     <tr>
                         <th width="1%" class="nowrap center">
-                            <?php echo JHtml::_('grid.checkall'); ?>
+                            <?php echo \Joomla\CMS\HTML\HTMLHelper::_('grid.checkall'); ?>
                         </th>
                         <th class="locations">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MYCITYSELECTOR_LOCATIONS', 'locations', $listDirn, $listOrder); ?>
+                            <?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'COM_MYCITYSELECTOR_LOCATIONS', 'locations', $listDirn, $listOrder); ?>
                         </th>
                         <th class="value">
-                            <?php echo JHtml::_('searchtools.sort', 'COM_MYCITYSELECTOR_FIELD_VALUES', 'value', $listDirn, $listOrder); ?>
+                            <?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'COM_MYCITYSELECTOR_FIELD_VALUES', 'value', $listDirn, $listOrder); ?>
                         </th>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'id', $listDirn, $listOrder); ?>
+                            <?php echo \Joomla\CMS\HTML\HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'id', $listDirn, $listOrder); ?>
                         </th>
                     </tr>
                 </thead>
@@ -94,13 +97,13 @@ $id  = (int) $this->item->id;
                         $canEdit = $user->authorise('core.edit', 'com_mycityselector.field.edit.' . $item['id']);
                         $canCheckin = $user->authorise('core.manage', 'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
                         $canChange = $user->authorise('core.edit.state', 'com_mycityselector.field.edit.' . $item['id']) && $canCheckin;
-                        $link = JRoute::_('index.php?option=com_mycityselector&view=fieldvalue&tmpl=component&field_id=' . $this->state->get('field.id') . '&id=' . $item['id']);
-                        echo JHtml::_(
+                        $link = \Joomla\CMS\Router\Route::_('index.php?option=com_mycityselector&view=fieldvalue&tmpl=component&field_id=' . $this->state->get('field.id') . '&id=' . $item['id']);
+                        echo \Joomla\CMS\HTML\HTMLHelper::_(
                             'bootstrap.renderModal',
                             'fieldValueModal' . $item['id'],
                             array(
                                 'url'         => $link,
-                                'title'       => JText::_('COM_MYCITYSELECTOR_FIELD_VALUES'),
+                                'title'       => \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_FIELD_VALUES'),
                                 'closeButton' => false,
                                 'width'       => '800px',
                                 'height'      => '300px',
@@ -108,13 +111,13 @@ $id  = (int) $this->item->id;
                                 'bodyHeight'  => '70',
                                 'footer'      => '<a role="button" class="btn" aria-hidden="true"'
                                     . ' onclick="window.processModalEdit(this, \'fieldValue\', \'add\', \'field\', \'cancel\', \'adminForm\'); location.reload(true); return false;">'
-                                    . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
+                                    . \Joomla\CMS\Language\Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
                                     . '<a role="button" class="btn btn-primary" aria-hidden="true"'
                                     . ' onclick="window.processModalEdit(this, \'fieldValue\', \'add\', \'fieldvalue\', \'save\', \'adminForm\'); location.reload(true); return false;">'
-                                    . JText::_('JSAVE') . '</a>'
+                                    . \Joomla\CMS\Language\Text::_('JSAVE') . '</a>'
                                     . '<a role="button" class="btn btn-success" aria-hidden="true"'
                                     . ' onclick="window.processModalEdit(this, \'fieldValue\', \'add\', \'fieldvalue\', \'apply\', \'adminForm\'); return false;">'
-                                    . JText::_('JAPPLY') . '</a>',
+                                    . \Joomla\CMS\Language\Text::_('JAPPLY') . '</a>',
                             )
                         );
                         ?>
@@ -122,14 +125,14 @@ $id  = (int) $this->item->id;
                             <td class="center">
                                 <?php
                                 if ($item['default'] != 1) {
-                                    echo JHtml::_('grid.id', $i, $item['id']);
+                                    echo \Joomla\CMS\HTML\HTMLHelper::_('grid.id', $i, $item['id']);
                                 }
                                 ?>
                             </td>
                             <td class="small">
                                 <div class="name break-word">
                                     <?php
-                                    $title = JText::_('COM_MYCITYSELECTOR_DEFAULTVALUE');
+                                    $title = \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_DEFAULTVALUE');
                                     if ($item['default'] == 0) {
 
                                         $cities = array_filter(explode(',', $item['cities']));
@@ -153,13 +156,14 @@ $id  = (int) $this->item->id;
                                         if (count($locations) > 3) {
                                             $count = count($locations) - 3;
                                             $locations = array_slice($locations, 0, 3);
-                                            $locations[] = JText::sprintf('COM_MYCITYSELECTOR_MORE_CITIES_ALSO', $count);
+                                            $locations[] = \Joomla\CMS\Language\Text::sprintf('COM_MYCITYSELECTOR_MORE_CITIES_ALSO', $count);
                                         }
                                         $title = implode(',', $locations);
                                     }
                                     if ($canEdit) {
                                         ?>
-                                        <a href="#fieldValueModal<?= $item['id'] ?>" data-toggle="modal"
+                                        <a href="#fieldValueModal<?= $item['id'] ?>" data-bs-toggle="modal"
+                                           data-bs-target="#fieldValueModal<?= $item['id'] ?>"
                                            title="<?= $this->escape($title) ?>">
                                             <?= $title ?>
                                         </a>
@@ -176,7 +180,8 @@ $id  = (int) $this->item->id;
                                 </div>
                             </td>
                             <td class="hidden-phone">
-                                <a href="#fieldValueModal<?= $item['id'] ?>" data-toggle="modal"
+                                <a href="#fieldValueModal<?= $item['id'] ?>" data-bs-toggle="modal"
+                                   data-bs-target="#fieldValueModal<?= $item['id'] ?>"
                                    title="<?= (int) $item['id']; ?>">
                                     <?= (int) $item['id']; ?></a>
                             </td>
@@ -189,15 +194,15 @@ $id  = (int) $this->item->id;
 
             <div class="field-values">
 				<?php
-				$link = JRoute::_('index.php?option=com_mycityselector&view=fieldvalue&tmpl=component&field_id=' . $this->state->get('field.id') . '&id=');
+				$link = \Joomla\CMS\Router\Route::_('index.php?option=com_mycityselector&view=fieldvalue&tmpl=component&field_id=' . $this->state->get('field.id') . '&id=');
 				?>
 				<?=
-				JHtml::_(
+				\Joomla\CMS\HTML\HTMLHelper::_(
 					'bootstrap.renderModal',
 					'fieldValueModal',
 					array(
 						'url'         => $link,
-						'title'       => JText::_('COM_MYCITYSELECTOR_FIELD_VALUES'),
+						'title'       => \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_FIELD_VALUES'),
 						'closeButton' => false,
 						'width'       => '800px',
 						'height'      => '300px',
@@ -205,32 +210,33 @@ $id  = (int) $this->item->id;
 						'bodyHeight'  => '70',
 						'footer'      => '<a role="button" class="btn" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \'fieldValue\', \'add\', \'field\', \'cancel\', \'adminForm\'); location.reload(true); return false;">'
-							. JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
+							. \Joomla\CMS\Language\Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
 							. '<a role="button" class="btn btn-primary" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \'fieldValue\', \'add\', \'fieldvalue\', \'save\', \'adminForm\'); location.reload(true); return false;">'
-							. JText::_('JSAVE') . '</a>'
+							. \Joomla\CMS\Language\Text::_('JSAVE') . '</a>'
 							. '<a role="button" class="btn btn-success" aria-hidden="true"'
 							. ' onclick="window.processModalEdit(this, \'fieldValue\', \'add\', \'fieldvalue\', \'apply\', \'adminForm\'); return false;">'
-							. JText::_('JAPPLY') . '</a>',
+							. \Joomla\CMS\Language\Text::_('JAPPLY') . '</a>',
 					)
 				);
 				?>
-                <a href="#fieldValueModal" role="button" class="btn btn-primary" data-toggle="modal"
-                   title="<?= JText::_('COM_MYCITYSELECTOR_ADDFORM'); ?>">
+                <a href="#fieldValueModal" role="button" class="btn btn-primary" data-bs-toggle="modal"
+                   data-bs-target="#fieldValueModal"
+                   title="<?= \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_ADDFORM'); ?>">
                 <span class="icon-list icon-white"
-                      aria-hidden="true"></span><?= JText::_('COM_MYCITYSELECTOR_ADDFORM'); ?>
+                      aria-hidden="true"></span><?= \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_ADDFORM'); ?>
                 </a>
                 <input type="hidden" id="fieldValue_id" name="fieldValue_id">
                 <input type="hidden" id="fieldValue_name" name="fieldValue_name">
             </div>
 		    <?php
 		} else {
-			echo JText::_('COM_MYCITYSELECTOR_SAVE_TO_ADD');
+			echo \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_SAVE_TO_ADD');
 		}
 		?>
         <input type="hidden" name="boxchecked" value="0"/>
         <input type="hidden" name="task" value=""/>
-		<?php echo JHtml::_('form.token'); ?>
+		<?php echo \Joomla\CMS\HTML\HTMLHelper::_('form.token'); ?>
     </form>
 </div>
 

@@ -9,9 +9,6 @@ defined('_JEXEC') or die(header('HTTP/1.0 403 Forbidden') . 'Restricted access')
 
 use joomx\mcs\plugin\helpers\McsData;
 
-jimport('joomla.application.component.modellist');
-
-
 /**
  * Class FieldsModel
  */
@@ -353,7 +350,7 @@ class MycityselectorModelFields extends Joomla\CMS\MVC\Model\ListModel
 			$id   = intval($data['id']);
 			if (empty($data['name']))
 			{
-				$this->lastError = 'Название не может быть пустым'; // todo JText::_('COM_MYCITYSELECTOR_HELLO_SAVE_ERROR')
+				$this->lastError = 'Название не может быть пустым'; // todo \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_HELLO_SAVE_ERROR')
 
 				return $id;
 			}

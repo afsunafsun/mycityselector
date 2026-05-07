@@ -46,34 +46,34 @@ class MycityselectorViewFields extends MycityselectorViewDefault
 
 	protected function addToolbar()
 	{
-		$canDo = JHelperContent::getActions('com_mycityselector');
+		$canDo = \Joomla\CMS\Helper\ContentHelper::getActions('com_mycityselector');
 
-		JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
 
 		if ($canDo->get('core.create'))
 		{
-			JToolbarHelper::addNew('field.add');
+			\Joomla\CMS\Toolbar\ToolbarHelper::addNew('field.add');
 		}
 
 		if ($canDo->get('core.edit'))
 		{
-			JToolbarHelper::editList('field.edit');
+			\Joomla\CMS\Toolbar\ToolbarHelper::editList('field.edit');
 		}
 
 		if ($canDo->get('core.edit.state'))
 		{
-			JToolbarHelper::publish('fields.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolbarHelper::unpublish('fields.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			\Joomla\CMS\Toolbar\ToolbarHelper::publish('fields.publish', 'JTOOLBAR_PUBLISH', true);
+			\Joomla\CMS\Toolbar\ToolbarHelper::unpublish('fields.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 		}
 
 		if ($canDo->get('core.delete'))
 		{
-			JToolbarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'fields.delete', 'JTOOLBAR_REMOVE');
+			\Joomla\CMS\Toolbar\ToolbarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'fields.delete', 'JTOOLBAR_REMOVE');
 		}
 
 		if ($canDo->get('core.admin'))
 		{
-			JToolbarHelper::preferences('com_mycityselector');
+			\Joomla\CMS\Toolbar\ToolbarHelper::preferences('com_mycityselector');
 		}
 
 

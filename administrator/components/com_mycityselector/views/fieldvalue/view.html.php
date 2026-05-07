@@ -7,12 +7,14 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\MVC\View\HtmlView;
+
 /**
  * MyCitySelector City View
  *
  * @since  1.5
  */
-class MycityselectorViewFieldvalue extends JViewLegacy
+class MycityselectorViewFieldvalue extends HtmlView
 {
 	public function display($tpl = null)
 	{

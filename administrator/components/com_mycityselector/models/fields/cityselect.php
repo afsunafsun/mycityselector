@@ -2,16 +2,19 @@
 
 defined('_JEXEC') or die;
 
-JFormHelper::loadFieldClass('list');
-if (!class_exists('McsData')) {
-    JLoader::register('plgSystemPlgMycityselector', JPATH_ROOT . '/plugins/system/plgmycityselector/plgmycityselector.php', false);
-    JLoader::load('plgSystemPlgMycityselector');
-    JLoader::import('plugins.system.plgmycityselector.helpers.McsData', JPATH_ROOT);
-}
-
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Form\FormHelper;
 use joomx\mcs\plugin\helpers\McsData;
 
-class JFormFieldCityselect extends JFormFieldList
+FormHelper::loadFieldClass('list');
+if (!\class_exists(McsData::class)) {
+    \JLoader::register('plgSystemPlgMycityselector', JPATH_ROOT . '/plugins/system/plgmycityselector/plgmycityselector.php', false);
+    \JLoader::load('plgSystemPlgMycityselector');
+}
+
+class JFormFieldCityselect extends ListField
 {
 
     protected $type = "Cityselect";
@@ -26,8 +29,8 @@ class JFormFieldCityselect extends JFormFieldList
 
     public function __construct(Form $form = null)
     {
-        $this->db = JFactory::getDbo();
-        $this->langId = McsData::getLangId();
+        $this->db = \Joomla\CMS\Factory::getDbo();
+        $this->langId = (int) McsData::getLangId();
 
         parent::__construct($form);
     }
@@ -107,11 +110,8 @@ class JFormFieldCityselect extends JFormFieldList
     protected function getSelected()
     {
         $selected = '';
-        $params = JComponentHelper::getParams('com_mycityselector');
-
-        if (!empty($params['default_city'])) {
-            $selected = $params['default_city'];
-        }
+        $params = ComponentHelper::getParams('com_mycityselector');
+        $selected = (string) $params->get('default_city', '');
 
         return $selected;
     }

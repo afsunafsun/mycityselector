@@ -6,8 +6,8 @@
  */
 
 defined('_JEXEC') or die;
+
 JLoader::register('MycityselectorHelper', JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . 'helpers'  . DIRECTORY_SEPARATOR . 'mycityselector.php');
-jimport('joomla.form.form');
 
 /**
  * Mycityselector Default View
@@ -59,12 +59,12 @@ class MycityselectorViewDefault extends Joomla\CMS\MVC\View\HtmlView
 		$canDo = Joomla\CMS\Helper\ContentHelper::getActions('com_mycityselector');
 		if ($canDo->get('core.admin') || $canDo->get('core.options'))
 		{
-			JToolbarHelper::preferences('com_mycityselector');
-			JToolbarHelper::divider();
+			\Joomla\CMS\Toolbar\ToolbarHelper::preferences('com_mycityselector');
+			\Joomla\CMS\Toolbar\ToolbarHelper::divider();
 		}
 
 		// Render side bar.
-		$this->sidebar = JHtmlSidebar::render();
+		$this->sidebar = \Joomla\CMS\HTML\Helpers\Sidebar::render();
 	}
 
 }

@@ -33,24 +33,24 @@ class MycityselectorViewCountry extends MycityselectorViewDefault
 
 	protected function addToolbar()
 	{
-		JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME') . ' - ' . JText::_('COM_MYCITYSELECTOR_ITEM_ADDING'), 'big-ico');
-		JToolbarHelper::apply('country.apply');
-		JToolbarHelper::save('country.save');
-		JToolbarHelper::save2new('country.save2new');
-		JToolbarHelper::cancel('country.cancel');
+		\Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME') . ' - ' . \Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_ITEM_ADDING'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::apply('country.apply');
+		\Joomla\CMS\Toolbar\ToolbarHelper::save('country.save');
+		\Joomla\CMS\Toolbar\ToolbarHelper::save2new('country.save2new');
+		\Joomla\CMS\Toolbar\ToolbarHelper::cancel('country.cancel');
 
 		//$state = $this->get('State');
-		$canDo = JHelperContent::getActions('com_mycityselector');
-		//$user  = JFactory::getUser();
+		$canDo = \Joomla\CMS\Helper\ContentHelper::getActions('com_mycityselector');
+		//$user  = \Joomla\CMS\Factory::getUser();
 
 		// Get the toolbar object instance
 		//$bar = JToolbar::getInstance('toolbar');
 
-		JToolbarHelper::title(JText::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
+		\Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_MYCITYSELECTOR_NAME'), 'big-ico');
 
 		if ($canDo->get('core.admin'))
 		{
-			JToolbarHelper::preferences('com_mycityselector');
+			\Joomla\CMS\Toolbar\ToolbarHelper::preferences('com_mycityselector');
 		}
 
 

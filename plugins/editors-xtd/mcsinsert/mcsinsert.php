@@ -28,7 +28,7 @@ class PlgButtonMcsinsert extends Joomla\CMS\Plugin\CMSPlugin
 			$button->modal = true;
 			$button->class = 'btn';
 			$button->link = 'index.php?option=com_mycityselector&amp;tmpl=component&amp;view=fields&amp;mode=popup';
-			$button->text = JText::_('MCS');
+			$button->text = \Joomla\CMS\Language\Text::_('MCS');
 			$button->name = 'tags-2';
 			$button->options = "{handler: 'iframe', size: {x: 600, y: 400}}";
 			return $button;

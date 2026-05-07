@@ -9,9 +9,6 @@ defined('_JEXEC') or die(header('HTTP/1.0 403 Forbidden') . 'Restricted access')
 
 use joomx\mcs\plugin\helpers\McsData;
 
-jimport('joomla.application.component.modellist');
-
-
 class MycityselectorModelProvince extends Joomla\CMS\MVC\Model\ListModel
 {
 

@@ -2,10 +2,12 @@
 defined('_JEXEC') or die;
 
 use joomx\mcs\plugin\helpers\McsData;
+use Joomla\CMS\Form\Field\ListField;
+use Joomla\CMS\Form\FormHelper;
 
-Joomla\CMS\Form\FormHelper::loadFieldClass('list');
+FormHelper::loadFieldClass('list');
 
-class JFormFieldProvincemultiselect extends JFormFieldList
+class JFormFieldProvincemultiselect extends ListField
 {
 
 	protected $type = "Provincemultiselect";
@@ -15,7 +17,7 @@ class JFormFieldProvincemultiselect extends JFormFieldList
 	public function getOptions()
 	{
 		$db = Joomla\CMS\Factory::getDbo();
-        $langId = McsData::getLangId();
+        $langId = (int) McsData::getLangId();
 		$query = $db->getQuery(true);
         $query->select('a.id as id, n.name as name')
             ->from($this->table . ' as a')
