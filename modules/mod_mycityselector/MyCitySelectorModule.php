@@ -60,6 +60,11 @@ class MyCitySelectorModule
      */
     private $module = null;
 
+    /**
+     * @var array|false
+     */
+    private $path = null;
+
     private $langId;
 
     /**

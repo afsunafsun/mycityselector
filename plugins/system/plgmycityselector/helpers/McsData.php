@@ -1234,7 +1234,7 @@ class McsData
                 }
                 $getParamsStr = parse_url($url, PHP_URL_QUERY);
                 $url = str_replace(['?', $getParamsStr], '', $url);
-                parse_str($getParamsStr, $getParamsArr);
+                parse_str($getParamsStr ?? '', $getParamsArr);
                 if ($isBaseDomainWasReplaced) { // если текущий домен не совпадает с базовым доменом, то добавляем параметры query вместо кукисов
                     switch ($typeLocation) {
                         case 'country':

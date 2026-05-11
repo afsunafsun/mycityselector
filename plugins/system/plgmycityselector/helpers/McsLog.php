@@ -73,11 +73,11 @@ class McsLog
         if (McsData::get('log_to_file')) {
             $file = JPATH_ROOT . '/mcs.log';
             $output = "=== " . date('d-m-Y H:i:s') . " ===\n";
-            $output .= "HTTP_USER_AGENT: {$_SERVER['HTTP_USER_AGENT']}\n";
-            $output .= "HTTP_REFERER: {$_SERVER['HTTP_REFERER']}\n";
-            $output .= "REQUEST_METHOD: {$_SERVER['REQUEST_METHOD']}\n";
-            $output .= "REQUEST_URI: {$_SERVER['REQUEST_URI']}\n";
-            $output .= "QUERY_STRING: {$_SERVER['QUERY_STRING']}\n";
+            $output .= 'HTTP_USER_AGENT: ' . ($_SERVER['HTTP_USER_AGENT'] ?? '') . "\n";
+            $output .= 'HTTP_REFERER: ' . ($_SERVER['HTTP_REFERER'] ?? '') . "\n";
+            $output .= 'REQUEST_METHOD: ' . ($_SERVER['REQUEST_METHOD'] ?? '') . "\n";
+            $output .= 'REQUEST_URI: ' . ($_SERVER['REQUEST_URI'] ?? '') . "\n";
+            $output .= 'QUERY_STRING: ' . ($_SERVER['QUERY_STRING'] ?? '') . "\n";
             $output .= "Is admin page: ".($isAdminPage ? 'true' : 'false')."\n";
             $output .= "Is edit mode: ".($isEditMode ? 'true' : 'false')."\n";
             if (!empty(self::$logs)) {

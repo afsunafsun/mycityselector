@@ -75,7 +75,7 @@ trait CasesHelper
      */
     public static function composeCasesFromWords(array $words, $delimiter = ' ') {
         $cases = [];
-        $all_cases = CasesHelper::getAllCases();
+        $all_cases = self::getAllCases();
         if (count($words[0]) === 7) $all_cases[] = \morphos\Russian\Cases::LOCATIVE;
         foreach ($all_cases as $case) {
             $composed_case = [];
